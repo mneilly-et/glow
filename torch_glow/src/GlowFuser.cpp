@@ -340,12 +340,13 @@ void setIncludeLastOffsets(std::shared_ptr<torch::jit::Graph> graph) {
       const auto ivalIncludeLastOffset = *torch::jit::toIValue(val);
 
       assert(ivalIncludeLastOffset.isBool());
-      if (!ivalIncludeLastOffset.toBool()) {
-        node->replaceInput(positionIndex, constantTrue);
-        LOG_FIRST_N(WARNING, 1)
-            << "Set include_last_offset to True for "
-            << node->kind().toQualString() << " and all other occurrences";
-      }
+      // mlupon -- Comment this code to fix DLRM
+      // if (!ivalIncludeLastOffset.toBool()) {
+      //   node->replaceInput(positionIndex, constantTrue);
+      //   LOG_FIRST_N(WARNING, 1)
+      //       << "Set include_last_offset to True for "
+      //       << node->kind().toQualString() << " and all other occurrences";
+      // }
     }
   }
 }

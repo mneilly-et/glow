@@ -94,6 +94,11 @@ inputMetaStackFromStack(const c10::ArrayRef<c10::IValue> &inputs,
       continue;
     }
 
+    // mlupon: Some models like BERT receive inputs that are
+    // not Tensors, for example INTs. Should not assert on those
+    // occasions, and just keep iterating
+    if (!input.isTensor()) continue;
+
     RETURN_ERR_IF_NOT(
         input.isTensor(),
         strFormat("Cannot create InputMeta from IValue of type %s",

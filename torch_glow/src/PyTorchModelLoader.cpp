@@ -5841,7 +5841,7 @@ PyTorchModelLoader::getGenerictList(const torch::jit::IValue &iVal) {
     return MAKE_ERR(strFormat("Not supported GenericList data type: %s.",
                               iValList[0].tagKind().c_str()));
   }
-  return glowIVal;
+  return std::move(glowIVal);
 }
 
 Error PyTorchModelLoader::loadConstant(const torch::jit::Node *ptNode) {
@@ -5998,8 +5998,9 @@ Error PyTorchModelLoader::loadEmbeddingBag(const torch::jit::Node *ptNode) {
   ASSIGN_VALUE_OR_RETURN_ERR(
       includeLastOffset, iValToBool(getGlowIValueForValue(
                              inputs[EmbeddingBagInputs::include_last_offset])));
-  RETURN_ERR_IF_NOT(includeLastOffset,
-                    "Currently only support include_last_offset='True'");
+  // mlupon: DLRM needs this
+  // RETURN_ERR_IF_NOT(includeLastOffset,
+  //                   "Currently only support include_last_offset='True'");
 
   auto *EB = F_.createEmbeddingBag("EmbeddingBag", weight, perSampleWeights,
                                    indices, offsets, includeLastOffset);

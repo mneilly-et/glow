@@ -716,7 +716,7 @@ compileImpl(const torch::jit::Module &origModule,
     }
   }
 
-  return methodToRunnerMap;
+  return std::move(methodToRunnerMap);
 }
 
 c10::impl::GenericDict
